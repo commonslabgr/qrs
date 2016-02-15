@@ -7,3 +7,5 @@ Users will be able to see what is the last printed ticket of their local post of
 This will help everyone to manage their time better, saving many working hours not being wasted waiting in queues.
 Also it will help the employees as they will not have to deal with too many frstrated customers, since the customers now will be better informed about the waiting and avoid frustration. Leading to an improved overall experience for both the public and the employees.
 The data should be open and thus providing many possibilites after studying them, visualizing them. For example one could gather annual data of a specific post office and manage when and where they need extra employees to offer better service. 
+
+Demo: http://q.commonslab.gr/qrs/
