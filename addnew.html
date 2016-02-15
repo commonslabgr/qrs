@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Add Data</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+</head>
+<body>
+<div><h2>ΟΑΕΔ Ηρακλείου</h2>
+<form action="add.php" method="post">
+    <input type="hidden" name="type" value="serving">
+    <input type="hidden" name="ofc_id" value="1">
+    <input type="submit" value="Serving New Customer">
+</form>
+<form action="add.php" method="post">
+    <input type="hidden" name="type" value="tickets">
+    <input type="hidden" name="ofc_id" value="1">
+    <input type="submit" value="Issuing New Ticket">
+</form>
+</div>
+<div><h2>ΕΛΤΑ</h2>
+<form action="add.php" method="post">
+    <input type="hidden" name="type" value="serving">
+    <input type="hidden" name="ofc_id" value="2">
+    <input type="submit" value="Serving New Customer">
+</form>
+<form action="add.php" method="post">
+    <input type="hidden" name="type" value="tickets">
+    <input type="hidden" name="ofc_id" value="2">
+    <input type="submit" value="Issuing New Ticket">
+</form>
+</div>
+<form action="clear.php" method="post">
+    <input type="hidden" name="type" value="tickets">
+    <input type="submit" value="Clear Tickets">
+</form>
+<form action="clear.php" method="post">
+    <input type="hidden" name="type" value="serving">
+    <input type="submit" value="Clear Serving">
+</form>
+<script type="text/javascript">
+
+$(document).ready(function(){
+var url="add.php";
+$("#jsondata tbody").html("");
+$.getJSON(url,function(data){
+$.each(data.queue, function(i,queue){
+var newRow =
+"<tr>"
++"<td>"+queue.id+"</td>"
++"<td>"+queue.name+"</td>"
++"<td>"+queue.nr_serving+"</td>"
++"<td>"+queue.nr_serving_time+"</td>"
++"<td>"+queue.nr_given+"</td>"
++"<td>"+queue.nr_given_time+"</td>"
++"<td>"+queue.accepting_new+"</td>"
++"<td>"+queue.est_waiting_time+"</td>"
++"</tr>" ;
+$(newRow).appendTo("#jsondata tbody");
+});
+});
+});
+</script>
+</body>
+</html>
