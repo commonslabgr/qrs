@@ -8,8 +8,184 @@
         <link rel="stylesheet" href="css/icon.css">
         <link rel="stylesheet" href="css/material.indigo-pink.min.css">
         <script defer src="js/material.min.js"></script>    
+        <link rel="stylesheet" href="css/widget.css">
     </head>
     
     <body>
+        <div id="main-card" class="demo-card-square mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title mdl-card--expand mdl-card__title_img">
+                <div class="text-gradient">
+                <h2 id="city-name" class="mdl-card__title-text"></h2>
+                </div>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <ul id="jsondata" class="demo-list-item mdl-list">
+                </ul>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <a id="toggle-map" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                ΧΑΡΤΗΣ
+                </a>
+                <a id="toggle-notify" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                ΕΙΔΟΠΟΙΗΣΗ
+                </a>
+            </div>
+        </div>
+        <div id="map-card" class="demo-card-square mdl-card mdl-shadow--2dp card-map">
+            <div class="mdl-card__title mdl-card--expand">
+                <h2 id="map-title" class="mdl-card__title-text"></h2>
+            </div>
+            <div id="map"></div>
+            <div class="mdl-card__actions mdl-card--border">
+                <a id="back-map" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                ΠΙΣΩ
+                </a>
+            </div>
+        </div>
+        <div id="notify-card" class="demo-card-square mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title mdl-card--expand mdl-card__title_img">
+                <h2 id="city-name" class="mdl-card__title-text">ΥΠΗΡΕΣΙΑ ΕΙΔΟΠΟΙΗΣΗΣ</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <br>
+                <form action="#">
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+                        <label class="mdl-textfield__label" for="sample2">Αριθμός σειράς...</label>
+                        <span class="mdl-textfield__error">Input is not a number!</span>
+                    </div>
+                </form>
+                <br>
+                <form action="#">
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" type="text" id="sample1">
+                        <label class="mdl-textfield__label" for="sample1">Email...</label>
+                    </div>
+                </form>
+                <br>
+                <form action="#">
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
+                        <label class="mdl-textfield__label" for="sample2">SMS...</label>
+                        <span class="mdl-textfield__error">Input is not a number!</span>
+                    </div>
+                </form>
+                <br>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                ΝΑ ΕΙΔΟΠΟΙΗΘΩ
+                </a>
+                <a id="back-notify" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                ΠΙΣΩ
+                </a>    
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    var office_id = 1;//ΟΑΕΔ 
+    //var office_id = 2;//ΕΛΤΑ;
+    
+    var map;
+    function initMap() {
+        var url="queue.php?id="+String(office_id);
+        
+        $.getJSON(url,function(data){
+            $.each(data.queue, function(i,queue){
+                //Set Logo
+                $(".mdl-card__title_img").css("background", "url('ofc_logos/"+queue.type_id+".jpg') bottom right 15% no-repeat #fff");
+                $(".mdl-card__title_img").css("background-position", "center");
+                $(".mdl-card__title_img").css("background-size", "66%");
+                //Set City Name
+                $("#city-name").text(queue.city);
+                //Set Title on Map card
+                $("#map-title").text(String(queue.name+' '+queue.city).toUpperCase());
+                
+                $("#jsondata").html("");
+                
+                //Set Data
+                var newRow = '<div id="tt1"><li class="mdl-list__item">'+
+                            '<span class="mdl-list__item-primary-content"><div class="mdl-tooltip" for="tt1">Τελευταίος αριθμός σειράς που έχει εκδοθεί.</div>'+
+                            '<img src="icons/ticket-48px.png"><h4>'+queue.nr_given+'</h4><h6>αρ. αναμονής</h6>'+
+                            '</span>'+
+                            '</li></div>'+
+                            '<div id="tt2"><li class="mdl-list__item">'+
+                            '<span class="mdl-list__item-primary-content"><div class="mdl-tooltip" for="tt2">Αριθμός που εξυπηρετείται τώρα.</div>'+
+                            '<img src="icons/clerk-48px.png"><h4>'+queue.nr_serving+'</h4><h6>αρ. εξυπηρέτησης</h6>'+
+                            '</span>'+
+                            '</li></div>'+
+                            '<div id="tt3"><li class="mdl-list__item">'+
+                            '<span class="mdl-list__item-primary-content"><div class="mdl-tooltip" for="tt3">Χρόνος αναμονής μέχρι την εξυπηρέτηση όλων.</div>'+
+                            '<img src="icons/hourglass-48px.png"><h4>'+((parseInt(queue.nr_given - queue.nr_serving))*parseFloat(queue.est_serving_time_min))+'</h4><h6>λεπτά</h6>'+
+                            '</span>'+
+                            '</li></div>';
+                $(newRow).appendTo("#jsondata");
+                myLatLng = {lat:'', lng:''};
+                myLatLng['lat'] = parseFloat(queue.latitude);
+                myLatLng['lng'] = parseFloat(queue.longtitude);
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: myLatLng,
+                    zoom: 15,
+                    zoomControl: true,
+                    mapTypeControl: true,
+                    scaleControl: false,
+                    streetViewControl: false,
+                    rotateControl: false,
+                    fullscreenControl: false
+                });
+                var contentString='<h4>'+queue.name+' '+queue.city+'</h4>'+
+                                  '<div>Διεύθυνση:'+queue.address+'<br>Τηλέφωνο:'+queue.telephone+'</div>';
+        
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString,
+                    maxWidth: 200
+                });
+
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    title: 'OAED Map'
+                });
+  
+                marker.addListener('click', function() {
+                    infowindow.open(map, marker);
+                });
+
+            });
+        }); 
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdfNsqF3vfIaL4fod1ZACIGQMcXakbxWg&callback=initMap"
+    async defer></script>
+<script type="text/javascript">
+$(document).ready(function(){  
+      
+    $("#toggle-map").click(function(){
+        $("#map-card").show();
+        initMap();
+        $("#main-card").hide();
+    });
+    $("#back-map").click(function(){
+        $("#map-card").hide();
+        $("#main-card").show();        
+    });
+    $("#toggle-notify").click(function(){
+        $("#notify-card").show();
+        $("#main-card").hide();            
+    });        
+    $("#back-notify").click(function(){
+        $("#notify-card").hide();
+        $("#main-card").show();    
+    });    
+    
+    $("#notify-card").hide();
+    
+    setTimeout(function(){
+        $("#map-card").hide();
+    }, 800);    
+});    
+</script>
+   
     </body>
 </html>
