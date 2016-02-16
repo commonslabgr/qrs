@@ -3,7 +3,7 @@
     <head>
         <meta name="viewport" content="width=device-width" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Υπηρεσία ενημέρωσης προταιρεότητας κοινού σε Δημόσιες Υπηρεσίες</title>
+        <title>Υπηρεσία προταιρεότητας εξυπηρέτησης πολιτών</title>
         <script type="text/javascript" src="js/jquery.min.js"></script>
         <link rel="stylesheet" href="css/icon.css">
         <link rel="stylesheet" href="css/material.indigo-pink.min.css">
@@ -12,7 +12,7 @@
     </head>
     
     <body>
-	<h5>Demo Υπηρεσίας ενημέρωσης προταιρεότητας κοινού</h5>
+	<h5>Demo: Υπηρεσίας προταιρεότητας εξυπηρέτησης πολιτών</h5>
 	<br>
 	<select id="ofc_selected">
 	    <option value="1" selected="selected">ΟΑΕΔ ΗΡΑΚΛΕΙΟΥ</option>
@@ -80,7 +80,7 @@
             </div>
             <div class="mdl-card__actions mdl-card--border">
                 <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-                ΕΙΔΟΠΟΙΗΣΗ
+                ΕΓΓΡΑΦΗ
                 </a>
                 <a id="back-notify" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
                 ΠΙΣΩ
@@ -90,13 +90,15 @@
     </div>
 
 <script type="text/javascript">
-    //var office_id = $("#ofc_selected").val();
-    
     var map;
+    
+    //Initialize Map
     function initMap() {
-	var office_id = $("#ofc_selected").val();
+        //Get Selected office id
+	    var office_id = $("#ofc_selected").val();
+        //Request data from API
         var url="queue.php?id="+String(office_id);
-        
+        //Parse JSON data
         $.getJSON(url,function(data){
             $.each(data.queue, function(i,queue){
                 //Set Logo
@@ -111,22 +113,24 @@
                 $("#jsondata").html("");
                 
                 //Set Data
-                var newRow = '<div id="tt1"><li class="mdl-list__item">'+
-                            '<span class="mdl-list__item-primary-content"><div class="mdl-tooltip" for="tt1">Τελευταίος αριθμός σειράς που έχει εκδοθεί.</div>'+
+                var newRow = '<li class="mdl-list__item">'+
+                            '<span class="mdl-list__item-primary-content">'+
                             '<img src="icons/ticket-48px.png"><h4>'+queue.nr_given+'</h4><h6>αρ. αναμονής</h6>'+
                             '</span>'+
-                            '</li></div>'+
-                            '<div id="tt2"><li class="mdl-list__item">'+
-                            '<span class="mdl-list__item-primary-content"><div class="mdl-tooltip" for="tt2">Αριθμός που εξυπηρετείται τώρα.</div>'+
+                            '</li>'+
+                            '<li class="mdl-list__item">'+
+                            '<span class="mdl-list__item-primary-content">'+
                             '<img src="icons/clerk-48px.png"><h4>'+queue.nr_serving+'</h4><h6>αρ. εξυπηρέτησης</h6>'+
                             '</span>'+
-                            '</li></div>'+
-                            '<div id="tt3"><li class="mdl-list__item">'+
-                            '<span class="mdl-list__item-primary-content"><div class="mdl-tooltip" for="tt3">Χρόνος αναμονής μέχρι την εξυπηρέτηση όλων.</div>'+
+                            '</li>'+
+                            '<li class="mdl-list__item">'+
+                            '<span class="mdl-list__item-primary-content">'+
                             '<img src="icons/hourglass-48px.png"><h4>'+((parseInt(queue.nr_given - queue.nr_serving))*parseFloat(queue.est_serving_time_min))+'</h4><h6>λεπτά</h6>'+
                             '</span>'+
-                            '</li></div>';
+                            '</li>';
                 $(newRow).appendTo("#jsondata");
+                
+                //Set coordinates for map
                 myLatLng = {lat:'', lng:''};
                 myLatLng['lat'] = parseFloat(queue.latitude);
                 myLatLng['lng'] = parseFloat(queue.longtitude);
@@ -140,6 +144,8 @@
                     rotateControl: false,
                     fullscreenControl: false
                 });
+                
+                //Set content for infobox in map
                 var contentString='<p>'+queue.name+' '+queue.city+'</p>'+
                                   '<div>Διεύθυνση:'+queue.address+'<br>Τηλέφωνο:'+queue.telephone+'</div>';
         
@@ -147,13 +153,15 @@
                     content: contentString,
                     maxWidth: 150
                 });
-
+                
+                //Place marker on map
                 var marker = new google.maps.Marker({
                     position: myLatLng,
                     map: map,
-                    title: 'OAED Map'
+                    title: 'Map'
                 });
-  
+                
+                //Add listener on marker to open info window
                 marker.addListener('click', function() {
                     infowindow.open(map, marker);
                 });
@@ -166,32 +174,33 @@
     async defer></script>
 <script type="text/javascript">
 $(document).ready(function(){  
-      
+    //Map button 
     $("#toggle-map").click(function(){
         $("#map-card").show();
         initMap();
         $("#main-card").hide();
     });
+    //Back button from map
     $("#back-map").click(function(){
         $("#map-card").hide();
         $("#main-card").show();        
     });
+    //Notify button
     $("#toggle-notify").click(function(){
         $("#notify-card").show();
         $("#main-card").hide();            
-    });        
+    });
+    //Back button from notify
     $("#back-notify").click(function(){
         $("#notify-card").hide();
         $("#main-card").show();    
     });    
-    
+    //Hide at load the map and notify cards
     $("#notify-card").hide();
-    
-    setTimeout(function(){
-        $("#map-card").hide();
-    }, 800);    
+    $("#map-card").hide();
 });    
 </script>
+   <br>
    <a href="https://github.com/commonslabgr/qrs">QRS on Github</a>
     </body>
 </html>
