@@ -1,4 +1,5 @@
-.demo-list-item {
+/* CARD*/
+.mdl-card .demo-list-item {
   width: 250px;
 }
 .card-map {
@@ -11,7 +12,7 @@
 }
 .demo-card-square > .mdl-card__title_img {
   background:
-    url('ofc_logos/blank.jpg') bottom right 15% no-repeat #fff;
+    url('../ofc_logos/blank.jpg') bottom right 15% no-repeat #fff;
   background-position: center;  
 }
 .mdl-card__title {
@@ -25,28 +26,27 @@
     background: #3f51b5;
     width:92%;
 }
-.mdl-list__item {
+.mdl-card .mdl-list__item {
     padding:5px;
     color: #fff;
 }
-.mdl-list__item h4{
+.mdl-card .mdl-list__item h4{
     padding-left:10%;
     padding-right:5%;
 }
-.mdl-list__item h6{
+.mdl-card .mdl-list__item h6{
     opacity:0.7;
+    line-height: 12px;
+    font-size: 12px;    
 }
-.mdl-list__item img {
+.mdl-card .mdl-list__item img {
     height:32px;
 }
-.mdl-list__item h4 {
+.mdl-card .mdl-list__item h4 {
     line-height: 12px;
     font-size: 20px;
 }
-.mdl-list__item h6 {
-    line-height: 12px;
-    font-size: 12px;
-}
+
 #service-title {
     font-size:18px;
 }
@@ -68,4 +68,46 @@
     background: -moz-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.5)); /* For Firefox 3.6 to 15 */
     background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.5));
     margin-top: auto;
+}
+/*INFO */
+#info {
+    width:30%;
+    float: left;
+}
+#info .mdl-card__title-text {
+    padding-left: 5%;
+    margin-top: 9%;
+    font-size: 22px;
+}
+#info .demo-card-wide > .mdl-card__title {
+  color: #fff;
+  height: 176px;
+  background: url('../ofc_logos/it4gov.jpg') center / cover;
+}
+#info .demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+#info .mdl-card__supporting-text {
+    color: #fff;
+}
+/*Sidebar*/
+#sidebar .mdl-list {
+    width: 200px;
+    width:30%;
+    float: left;
+}
+
+#sidebar {
+    width:30%;
+    float:left;
+}
+
+/*FOOTER*/
+#footer {
+width: 90%;
+height: 70px;
+padding: 30px;
+    position: absolute;
+    color: #fff;
+    background: #666;
 }
